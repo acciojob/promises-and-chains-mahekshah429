@@ -1,33 +1,34 @@
-document.getElementById("voteForm").addEventListener("submit", function (event) {
+const form = document.getElementById('voteForm');
+const ageInput = document.getElementById('age');
+const nameInput = document.getElementById('name');
+
+form.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const age = document.getElementById("age").value.trim();
-  const ageNumber = parseInt(age);
+  const age = ageInput.value.trim();
+  const name = nameInput.value.trim();
 
-  // Validate for empty or invalid inputs
-  if (name === "" || age === "" || isNaN(ageNumber)) {
+  if (age === '' || name === '') {
     alert("Please enter valid details.");
     return;
   }
 
-  // Create promise
-  const checkEligibility = new Promise((resolve, reject) => {
+  // Create a promise to handle voting eligibility
+  const eligibilityPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (ageNumber >= 18) {
-        resolve();
+      if (parseInt(age, 10) > 18) {
+        resolve(`Welcome, ${name}. You can vote.`);
       } else {
-        reject();
+        reject(`Oh sorry ${name}. You aren't old enough.`);
       }
-    }, 4000); // 4-second delay
+    }, 4000);
   });
 
-  // Handle result
-  checkEligibility
-    .then(() => {
-      alert(`Welcome, ${name}. You can vote.`);
+  eligibilityPromise
+    .then((message) => {
+      alert(message);
     })
-    .catch(() => {
-      alert(`Oh sorry ${name}. You aren't old enough.`);
+    .catch((errorMessage) => {
+      alert(errorMessage);
     });
 });
